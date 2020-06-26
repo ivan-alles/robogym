@@ -1,2 +1,5 @@
-# robogym
-Algorithms for robotics and computer vision.
+# Robogym
+
+Robogym is a library of algorithms for robotics and computer vision.
+ 
+     
