@@ -94,11 +94,14 @@ def calibrate_camera_to_robot(robot_poses_tool, camera_poses_marker):
     if len(robot_poses_tool) != poses_count:
         raise ValueError("Number of gripper poses must match number of calibration object poses")
 
+    def pose_delta(p0, p1):
+        return np.dot(inv(p0), p1)
+
     for i in range(poses_count):
         for j in range(i + 1, poses_count):
-            a.append(get_pose_delta(robot_poses_tool[i], robot_poses_tool[j]))
+            a.append(pose_delta(robot_poses_tool[i], robot_poses_tool[j]))
 
-            b.append(get_pose_delta(camera_poses_marker[i], camera_poses_marker[j]))
+            b.append(pose_delta(camera_poses_marker[i], camera_poses_marker[j]))
 
     x, e1, e2 = solve_ax_xb_park_martin(a, b)
 
@@ -109,7 +112,3 @@ def calibrate_camera_to_robot(robot_poses_tool, camera_poses_marker):
 
     return robot_pose_camera, tool_pose_marker, e1, e2
 
-
-def get_pose_delta(p0, p1):
-    d = np.dot(inv(p0), p1)
-    return d
