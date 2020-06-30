@@ -39,7 +39,6 @@ class Transform3Test:
         assert np.allclose(tr.m[0:3, 0:4], m[0:3, 0:4])
         assert np.allclose(tr.m[3:, 0:], [0, 0, 0, 1])
 
-
         # 3 vector, 3x3 matrix,
         tr = Transform3(m[0:3, 3:].squeeze(), m[0:3, 0:3])
         assert np.allclose(tr.m[0:3, 0:4], m[0:3, 0:4])
@@ -51,7 +50,6 @@ class Transform3Test:
         m[0:3, 3:] = tvec
         assert np.allclose(Transform3(tvec).m, m)
         assert np.allclose(Transform3.from_t(tvec).m, m)
-
 
         # 3 tvec, 3 rvec
         a = 0.1
@@ -215,7 +213,6 @@ class Transform3Test:
         assert self._check_dim_and_equality(tr.dot(v35), exp_r)
         assert self._check_dim_and_equality(tr.dot(v35.T, True), exp_r.T)
 
-
         v45 = np.append(v35, np.full((1, 5), 1, np.float32), axis=0)
         exp_r = np.append(exp_r, np.full((1, 5), 1, np.float32), axis=0)
         assert self._check_dim_and_equality(tr.dot(v45), exp_r)
@@ -232,7 +229,7 @@ class Transform3Test:
         k_1 = k.inv()
         p3_1 = k_1.unproject(p2, True)
 
-        #Scale by z to obtain original point
+        # Scale by z to obtain original point
         p3_1 = np.multiply(p3_1, p3[:, 2:])
         assert self._check_dim_and_equality(p3_1, p3, atol=1.e-5)
 
@@ -269,4 +266,3 @@ class Transform3Test:
             if a1.shape[d] != a2.shape[d]:
                 return False
         return np.allclose(a1, a2, rtol=rtol, atol=atol, equal_nan=equal_nan)
-
