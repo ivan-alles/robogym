@@ -35,7 +35,7 @@ def solve_ax_xb_park_martin(a, b):
         # for p == 2 an exact solution could be used, but we will not waste time for it.
         raise ValueError("At least three pairs of matrices A and B are required")
 
-    m = np.zeros((3,3), dtype=np.float64)
+    m = np.zeros((3, 3), dtype=np.float64)
     log_ra = np.empty((p, 3), dtype=np.float64)
     log_rb = np.empty((p, 3), dtype=np.float64)
     for i in range(p):
@@ -111,4 +111,3 @@ def calibrate_camera_to_robot(robot_poses_tool, camera_poses_marker):
     robot_pose_camera = np.dot(np.dot(robot_poses_tool[0], tool_pose_marker), inv(camera_poses_marker[0]))
 
     return robot_pose_camera, tool_pose_marker, e1, e2
-
