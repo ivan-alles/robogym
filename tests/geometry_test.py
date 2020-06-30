@@ -190,7 +190,7 @@ def test_spherical_to_cartesian_n_3():
     assert np.allclose(exp2, act[2])
 
 
-def convert(x):
+def convert_cartesian_to_spherical(x):
     r = np.linalg.norm(x)
     n = len(x)
     phi = np.zeros(n - 1)
@@ -229,7 +229,7 @@ def test_cartesian_to_spherical_n_2():
     r_act, phi_act = robogym.geometry.cartesian_to_spherical_n(x)
 
     for i in range(len(x)):
-        r_exp, phi_exp = convert(x[i])
+        r_exp, phi_exp = convert_cartesian_to_spherical(x[i])
         assert np.allclose(r_act[i], r_exp)
         assert np.allclose(phi_act[i], phi_exp)
 
@@ -252,7 +252,7 @@ def test_cartesian_to_spherical_n_3():
     r_act, phi_act = robogym.geometry.cartesian_to_spherical_n(x)
 
     for i in range(len(x)):
-        r_exp, phi_exp = convert(x[i])
+        r_exp, phi_exp = convert_cartesian_to_spherical(x[i])
         assert np.allclose(r_act[i], r_exp)
         assert np.allclose(phi_act[i], phi_exp)
 
@@ -273,7 +273,7 @@ def test_cartesian_to_spherical_n_4():
     r_act, phi_act = robogym.geometry.cartesian_to_spherical_n(x)
 
     for i in range(len(x)):
-        r_exp, phi_exp = convert(x[i])
+        r_exp, phi_exp = convert_cartesian_to_spherical(x[i])
         assert np.allclose(r_act[i], r_exp)
         assert np.allclose(phi_act[i], phi_exp)
 
