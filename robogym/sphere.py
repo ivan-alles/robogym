@@ -2,29 +2,32 @@
 
 import numpy as np
 
+
 def spherical_to_cartesian_n(r, phi):
     """
     Convert spherical to cartesian coordinates in n dimensions.
 
     See https://en.wikipedia.org/wiki/N-sphere#Spherical_coordinates.
     :param r: radius (a scalar or a column of scalars).
-    :param phi: a vector of anlges of size n-1 or column of such vectors. phi[0:n-2] vary in range [0, pi], phi[n-1] in [0, 2*pi] or in [-pi, pi].
+    :param phi: a vector of anlges of size n-1 or column of such vectors.
+    phi[0:n-2] vary in range [0, pi], phi[n-1] in [0, 2*pi] or in [-pi, pi].
     :return: cartesian coordinates (a vector of size n or a column of such vectors).
     """
     ones_shape = (1,) if phi.ndim == 1 else phi.shape[:1] + (1,)
     ones = np.full(ones_shape, 1.0, dtype=phi.dtype)
     sinphi = np.sin(phi)
     axis = 0 if phi.ndim == 1 else 1
-    sinphi = np.cumprod(sinphi, axis = axis)
-    sinphi = np.concatenate((ones, sinphi), axis = axis)
+    sinphi = np.cumprod(sinphi, axis=axis)
+    sinphi = np.concatenate((ones, sinphi), axis=axis)
     cosphi = np.cos(phi)
-    cosphi = np.concatenate((cosphi, ones), axis = axis)
+    cosphi = np.concatenate((cosphi, ones), axis=axis)
 
     x = sinphi * cosphi * r
 
     return x
 
-def cartesian_to_spherical_n(x, eps = 1e-10):
+
+def cartesian_to_spherical_n(x, eps=1e-10):
     """
     Converts cartesian to spherical coordinates in n dimensions.
 
@@ -33,7 +36,8 @@ def cartesian_to_spherical_n(x, eps = 1e-10):
     :param eps: elements of x < eps are considered to be 0.
     :return: r, phi
     r: radius (a scalar or a column of scalars)
-    phi: a vector of angles of size n-1 or column of such vectors. phi[0:n-2] vary in range [0, pi], phi[n-1] in [-pi, pi].
+    phi: a vector of angles of size n-1 or column of such vectors.
+    phi[0:n-2] vary in range [0, pi], phi[n-1] in [-pi, pi].
     """
     is_reshaped = False
     if x.ndim == 1:
@@ -69,5 +73,3 @@ def cartesian_to_spherical_n(x, eps = 1e-10):
         phi = phi.reshape(phi.size)
 
     return r, phi
-
-

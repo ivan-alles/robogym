@@ -24,6 +24,7 @@ def hsv_hue_diff(hue1, hue2, min_hue=1, max_hue=None):
     d = np.min(d, axis=0)
     return d
 
+
 def normalize_intensity(image, min, max, k, g, c, b, out=None):
     """
     Clip the intensity of the image at min, max. Then transform the values using the formula:

@@ -6,6 +6,7 @@ import numpy as np
 from numpy.linalg import norm, inv
 from scipy.spatial.transform import Rotation
 
+
 class Transform3:
     """ A transformation for in 3d space.
 
@@ -13,7 +14,8 @@ class Transform3:
         Stores the transformation as 4x4 matrix (actually np.ndarray) internally.
         The class is designed for simplicity and convenience of usage, not for efficiency.
 
-        The interface somewhat resembles numpy ndarray, to make it easier to port from typical numpy code with a lot of dot() and inv() calls.
+        The interface somewhat resembles numpy ndarray, to make it easier to port from typical numpy code
+        with a lot of dot() and inv() calls.
         Usage of * operator is deliberately avoided as it resembles numpy element-wise mulitplication.
     """
 
@@ -42,7 +44,7 @@ class Transform3:
         than the partial matrices overwrite it.
         """
 
-        if len(args) is 0:
+        if len(args) == 0:
             self._m = np.identity(4, dtype=Transform3.DTYPE)
         elif len(args) == 1:
             arg = args[0]
@@ -52,21 +54,18 @@ class Transform3:
             elif arg_type == str:
                 self._m = Transform3.from_str(arg).m
             else:
-                arg = self._try_convert_to_array(arg)
                 self._init_from_one_array(arg)
         elif len(args) == 2:
-            arg1 = self._try_convert_to_array(args[0])
-            arg2 = self._try_convert_to_array(args[1])
-            self._init_from_two_arrays(arg1, arg2)
+            self._init_from_two_arrays(args[0], args[1])
 
         if not hasattr(self, '_m'):
-            raise  ValueError("Cannot create Transform3 with given arguments: " + str(args))
+            raise ValueError("Cannot create Transform3 with given arguments: " + str(args))
 
     @staticmethod
     def from_axis_angle(axis, angle=None):
         """
         Create a rotation around from axis by an angle centered at origin.
-        
+
         Use @staticmethod here and later because this is a kind of constructor.
         :param axis: axis of rotation.
         :param angle: angle of rotation. If None, the angle equals the norm of the axis.
@@ -78,7 +77,7 @@ class Transform3:
     def from_center_axis_angle(center, axis, angle=None):
         """
         Create a rotation around from axis by an angle centered at a given center.
-        
+
         :param center: center of rotation.
         :param axis: axis of rotation.
         :param angle: angle of rotation. If None, the angle equals the norm of the axis.
@@ -89,12 +88,11 @@ class Transform3:
         tr._m[0:3, 3:] = (c - tr.r.dot(c)).reshape(3, 1)
         return tr
 
-
     @staticmethod
     def from_t_axis_angle(t, axis, angle):
         """
         Create a transform from translation, axis and angle.
-        
+
         :param t: translation.
         :param axis: axis of rotation
         :param angle: angle of rotation. If None, the angle equals the norm of the axis.
@@ -118,7 +116,7 @@ class Transform3:
     def from_t(t):
         """
         Create a transform from a rotation vector.
-        
+
         :param t: translation vector of size 3.
         :return: transform.
         """
@@ -129,19 +127,18 @@ class Transform3:
     def from_pose6(pose):
         """
         Create a transform from 6 DOF pose.
-        
+
         :param pose: 6 DOF pose (tx, ty, tz, rx, ry, rz)
         :return: transform.
         """
         pose = np.array(pose).squeeze()
         return Transform3.from_t_axis_angle(pose[0:3], pose[3:6], None)
 
-
     @staticmethod
     def from_t_r(t, r):
         """
         Create a transform from a translation vector and 3x3 rotation matrix.
-        
+
         :param t: translation vector of size 3.
         :param r: rotation matrix
         :return: transform.
@@ -158,7 +155,8 @@ class Transform3:
         """
         Create a a scale transform.
 
-        :param scale: if it is a scalar, a uniform scale transform is created. Otherwise it must be a vector of size 3 [sx, sy, sz].
+        :param scale: if it is a scalar, a uniform scale transform is created.
+        Otherwise it must be a vector of size 3 [sx, sy, sz].
         :return: transform.
         """
         scale = np.array(scale).squeeze()
@@ -173,11 +171,8 @@ class Transform3:
     def from_str(s, sep=' '):
         return Transform3(np.fromstring(s, sep=sep, dtype=Transform3.DTYPE))
 
-    def _try_convert_to_array(self, arg):
-        return np.array(arg, Transform3.DTYPE)
-
     def _init_from_one_array(self, a):
-        a = a.squeeze()  # Remove 1-dimensions. Vectors nx1 become single-dimensional
+        a = np.array(a, Transform3.DTYPE).squeeze()
         if a.shape == (16,):
             a = a.reshape((4, 4))
         elif a.shape == (12,):
@@ -202,15 +197,15 @@ class Transform3:
 
     def _init_from_two_arrays(self, a1, a2):
         # Remove 1-dimensions. Vectors nx1 become single-dimensional
-        a1 = a1.squeeze()
-        a2 = a2.squeeze()
+        a1 = np.array(a1, Transform3.DTYPE).squeeze()
+        a2 = np.array(a2, Transform3.DTYPE).squeeze()
 
         if a2.shape == (3, ):
             self._m = Transform3.from_t_axis_angle(a1, a2, None)._m
         else:
-            self._m =  Transform3.from_t_r(a1, a2)._m
+            self._m = Transform3.from_t_r(a1, a2)._m
 
-    def is_rot(self):
+    def is_rotation(self):
         """
         Check if self.r is a rotation matrix. In other words,  it preserves angles and is not a symmetry transform.
         The transformation part does not matter.
@@ -368,15 +363,13 @@ class Transform3:
         return r
 
     def _dot_vec(self, input, transpose):
+        # Developer notes: we could have added auto-transposing of inputs of sizes Mx3 or Mx4,
+        # but this leads to ambiguities with sizes like 3x3, 3x4, 4x3, 4x4 and probably does more harm than good.
+        # Just think about an algo returning an array of row-vectors of variable size. This array cannot be safely
+        # passed to this method, because it will be sometimes transposed, sometimes not.
+        # So, it's more safe to let the user transform the data.
 
-        # Developer notes: we could have added auto-transposing of inputs of sizes Mx3 or Mx4, but this leads to ambiguities with
-        # sizes like 3x3, 3x4, 4x3, 4x4 and probably does more harm than good. Just think about an algo returning an array of row-vectors
-        # of variable size. This array cannot be safely passed to this method, because it will be sometimes transposed, sometimes not.
-        # So, it's safe and eayse to let the user transform the data.
-
-        # Adapt layout
-
-        inp = self._try_convert_to_array(input)
+        inp = np.array(input, Transform3.DTYPE)
 
         if inp.ndim < 1 or inp.ndim > 2:
             raise ValueError('Input dimension must be 1 or 2')
@@ -392,8 +385,8 @@ class Transform3:
         is_augmented = False
         if M == 3:
             # Augment with ones
-            # We could have done a it more efficiently by multiplying by r and adding t, if we were sure that the last row
-            # of our matrix is  [0, 0, 0, 1].
+            # We could have done a it more efficiently by multiplying by r and adding t,
+            # if we were sure that the last row of our matrix is  [0, 0, 0, 1].
             inp = np.append(inp, np.full((1, N), 1, Transform3.DTYPE), axis=0)
             is_augmented = True
 
@@ -402,7 +395,7 @@ class Transform3:
 
         # Convert layout to the original one
         if is_augmented:
-            out = out[0:-1,:]
+            out = out[0:-1, :]
         out = input_adapter.revert(out)
 
         return out
@@ -419,8 +412,8 @@ class Transform3:
 
         # Now we have a Mx3 or Mx4 array
         p = self.dot(rhs)
-        xy = p[0:2,:]
-        z = p[2:3,:]
+        xy = p[0:2, :]
+        z = p[2:3, :]
         p = np.divide(xy, z)
         p = input_adapter.revert(p)
 
@@ -443,7 +436,6 @@ class Transform3:
         u = self.r.dot(rhs)
         u = input_adapter.revert(u)
         return u
-
 
     def unproject_on_plane(self, rhs, plane_eq, transpose=False):
         """
@@ -498,7 +490,7 @@ class Transform3:
         - If it is a rotation matrix, this is t, axis, angle
         - otherwise a list of lists [4x4].
         """
-        if is_rot(self.r):
+        if self.is_rotation():
             m = np.hstack(self.t_axis_angle())
         else:
             m = self._m
@@ -562,7 +554,7 @@ class MatrixAdapter:
     @staticmethod
     def create(input, transpose):
         adapter = MatrixAdapter()
-        input = np.array(input)
+        input = np.array(input, dtype=Transform3.DTYPE)
         adapter._transpose = transpose
         adapter._ndim = input.ndim
         if adapter._transpose:

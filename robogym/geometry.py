@@ -3,7 +3,7 @@
 import numpy as np
 
 
-def normalize_angle(angle, period = np.pi * 2, start=None):
+def normalize_angle(angle, period=np.pi * 2, start=None):
     """
     Transforms the angle to the value in range [start, start + period].
 
@@ -136,11 +136,3 @@ def plane_line_intersection(plane_n, plane_p0, line_p0, line_p1, epsilon=1e-10):
         return line_p0
     intersection_point = d * line_l + line_p0
     return intersection_point
-
-
-
-
-
-
-
-

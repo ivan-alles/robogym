@@ -4,6 +4,7 @@
 Error detection and correction algorithms.
 """
 
+
 class HammingErrorCorrectionCodec:
     """
     Implement Hamming algorithm.
