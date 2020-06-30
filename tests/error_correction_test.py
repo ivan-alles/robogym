@@ -2,14 +2,14 @@
 
 import numpy as np
 
-from robogym.error_corrrection import *
+from robogym import error_corrrection
 
 
 class HammingErrorCorrectionCodecTest:
 
     def test_simple(self):
 
-        codec = HammingErrorCorrectionCodec()
+        codec = error_corrrection.HammingErrorCorrectionCodec()
 
         data = [1]
         code = codec.encode(data)
@@ -22,7 +22,6 @@ class HammingErrorCorrectionCodecTest:
         assert data1 == data
         data1 = codec.decode([1, 1, 0])
         assert data1 == data
-
 
         data = [0]
         code = codec.encode(data)
@@ -38,7 +37,7 @@ class HammingErrorCorrectionCodecTest:
 
     def test_padding(self):
 
-        codec = HammingErrorCorrectionCodec()
+        codec = error_corrrection.HammingErrorCorrectionCodec()
 
         # The data should be internally padded with 2 zeros,
         # but the returned code will not contain padding.
@@ -54,9 +53,8 @@ class HammingErrorCorrectionCodecTest:
         data1 = codec.decode(code)
         assert data1 is None
 
-
     def test_random(self):
-        codec = HammingErrorCorrectionCodec()
+        codec = error_corrrection.HammingErrorCorrectionCodec()
 
         rng = np.random.RandomState(1)
 
@@ -79,7 +77,3 @@ class HammingErrorCorrectionCodecTest:
                 code[p] = 1 - code[p]
                 decoded_data = codec.decode(code)
                 assert decoded_data is None or len(decoded_data) == data_len
-
-
-
-
