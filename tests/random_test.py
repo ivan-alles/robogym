@@ -2,6 +2,7 @@
 
 from robogym import random
 
+
 def test_str_to_random():
     r1 = random.str_to_random('s1')
     r2 = random.str_to_random('s2')
