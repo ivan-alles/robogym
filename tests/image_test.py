@@ -1,23 +1,27 @@
 #  Copyright 2016-2020 Ivan Alles. See also the LICENSE file.
 
-from robogym.image import *
+import numpy as np
+
+from robogym import image
+
 
 def test_normalize_intensity():
+
     def check(input, min, max, k, g, c, b, expected_output):
         input = np.array(input)
         # Case 1: out == None
-        output = normalize_intensity(input, min, max, k, g, c, b, out=None)
+        output = image.normalize_intensity(input, min, max, k, g, c, b, out=None)
         assert np.allclose(output, expected_output)
 
         # Case 1: out != input
         out = np.zeros_like(expected_output)
-        output = normalize_intensity(input, min, max, k, g, c, b, out=out)
+        output = image.normalize_intensity(input, min, max, k, g, c, b, out=out)
         assert np.allclose(output, expected_output)
         assert out is output
         assert out is not input
 
         # Case 2: out == input
-        output = normalize_intensity(input, min, max, k, g, c, b, out=input)
+        output = image.normalize_intensity(input, min, max, k, g, c, b, out=input)
         assert np.allclose(output, expected_output)
         assert output is input
 
