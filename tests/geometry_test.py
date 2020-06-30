@@ -14,9 +14,9 @@ def test_normalize_angle():
 
     assert geometry.normalize_angle(100, 180) == -80
 
-    assert np.allclose(np.normalize_angle(np.pi + 0.1, 2 * np.pi), -np.pi + 0.1)
-    assert np.allclose(np.normalize_angle(np.pi + 0.1), -np.pi + 0.1)
-    assert np.allclose(np.normalize_angle(np.pi + 0.1, 2 * np.pi, -np.pi), -np.pi + 0.1)
+    assert np.allclose(geometry.normalize_angle(np.pi + 0.1, 2 * np.pi), -np.pi + 0.1)
+    assert np.allclose(geometry.normalize_angle(np.pi + 0.1), -np.pi + 0.1)
+    assert np.allclose(geometry.normalize_angle(np.pi + 0.1, 2 * np.pi, -np.pi), -np.pi + 0.1)
 
 
 def test_mean_of_angles():

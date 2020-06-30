@@ -1,6 +1,9 @@
 #  Copyright 2016-2020 Ivan Alles. See also the LICENSE file.
 
-from robogym.sphere import *
+import numpy as np
+
+from robogym import sphere
+
 
 def test_spherical_to_cartesian_n_2():
     def compute(r, phi):
@@ -12,37 +15,37 @@ def test_spherical_to_cartesian_n_2():
 
     r = 1.
     phi = np.array([0.1])
-    act = spherical_to_cartesian_n(r, phi)
+    act = sphere.spherical_to_cartesian_n(r, phi)
     exp = compute(r, phi)
     assert np.allclose(exp, act)
 
     r = 0.
     phi = np.array([0.1])
-    act = spherical_to_cartesian_n(r, phi)
+    act = sphere.spherical_to_cartesian_n(r, phi)
     exp = compute(r, phi)
     assert np.allclose(exp, act)
 
     r = 0.
     phi = np.array([0.2])
-    act = spherical_to_cartesian_n(r, phi)
+    act = sphere.spherical_to_cartesian_n(r, phi)
     exp = compute(r, phi)
     assert np.allclose(exp, act)
 
     r = 3.
     phi = np.array([0.1])
-    act = spherical_to_cartesian_n(r, phi)
+    act = sphere.spherical_to_cartesian_n(r, phi)
     exp = compute(r, phi)
     assert np.allclose(exp, act)
 
     r = 2.
     phi = np.array([0.3])
-    act = spherical_to_cartesian_n(r, phi)
+    act = sphere.spherical_to_cartesian_n(r, phi)
     exp = compute(r, phi)
     assert np.allclose(exp, act)
 
     r = 2.
     phi = np.array([-0.3])
-    act = spherical_to_cartesian_n(r, phi)
+    act = sphere.spherical_to_cartesian_n(r, phi)
     exp = compute(r, phi)
     assert np.allclose(exp, act)
 
@@ -57,20 +60,19 @@ def test_spherical_to_cartesian_n_3():
         return np.array(exp).ravel()
     r = 1.
     phi = np.array([0.1, 0.2])
-    act = spherical_to_cartesian_n(r, phi)
+    act = sphere.spherical_to_cartesian_n(r, phi)
     exp = compute(r, phi)
     assert np.allclose(exp, act)
-
 
     r = 2.
     phi = np.array([0.1, 0.2])
-    act = spherical_to_cartesian_n(r, phi)
+    act = sphere.spherical_to_cartesian_n(r, phi)
     exp = compute(r, phi)
     assert np.allclose(exp, act)
 
-    r =  np.array([3., 4., 5]).reshape(-1, 1)
+    r = np.array([3., 4., 5]).reshape(-1, 1)
     phi = np.array([[0.1, -0.2], [0.1, 0.2], [0.3, -0.2]])
-    act = spherical_to_cartesian_n(r, phi)
+    act = sphere.spherical_to_cartesian_n(r, phi)
     exp0 = compute(r[0], phi[0])
     exp1 = compute(r[1], phi[1])
     exp2 = compute(r[2], phi[2])
@@ -103,9 +105,8 @@ def convert(x):
 
     return r, phi
 
-def test_cartesian_to_spherical_n_2():
-    rng = np.random.RandomState(seed=1)
 
+def test_cartesian_to_spherical_n_2():
     x = np.array([
         [0, 0],
         [1, 0],
@@ -116,19 +117,15 @@ def test_cartesian_to_spherical_n_2():
         [-1, 4]
     ], dtype=np.float32)
 
-    r_act, phi_act = cartesian_to_spherical_n(x)
+    r_act, phi_act = sphere.cartesian_to_spherical_n(x)
 
     for i in range(len(x)):
         r_exp, phi_exp = convert(x[i])
-        if not np.allclose(r_act[i], r_exp):
-            self.assertTrue(False)
-        if not np.allclose(phi_act[i], phi_exp):
-            self.assertTrue(False)
+        assert np.allclose(r_act[i], r_exp)
+        assert np.allclose(phi_act[i], phi_exp)
 
 
 def test_cartesian_to_spherical_n_3():
-    rng = np.random.RandomState(seed=1)
-
     x = np.array([
         [0, 0, 0],
         [1, 0, 0],
@@ -143,16 +140,15 @@ def test_cartesian_to_spherical_n_3():
         [0, 0, -2]
     ], dtype=np.float32)
 
-    r_act, phi_act = cartesian_to_spherical_n(x)
+    r_act, phi_act = sphere.cartesian_to_spherical_n(x)
 
     for i in range(len(x)):
         r_exp, phi_exp = convert(x[i])
         assert np.allclose(r_act[i], r_exp)
         assert np.allclose(phi_act[i], phi_exp)
 
-def test_cartesian_to_spherical_n_4():
-    rng = np.random.RandomState(seed=1)
 
+def test_cartesian_to_spherical_n_4():
     x = np.array([
         [0, 0, 0, 0],
         [1, 0, 0, 0],
@@ -165,12 +161,13 @@ def test_cartesian_to_spherical_n_4():
         [-1, -2, -3, 4],
     ], dtype=np.float32)
 
-    r_act, phi_act = cartesian_to_spherical_n(x)
+    r_act, phi_act = sphere.cartesian_to_spherical_n(x)
 
     for i in range(len(x)):
         r_exp, phi_exp = convert(x[i])
         assert np.allclose(r_act[i], r_exp)
         assert np.allclose(phi_act[i], phi_exp)
+
 
 def test_cartesian_to_spherical_n_back_and_forth():
     rng = np.random.RandomState(seed=1)
@@ -178,11 +175,11 @@ def test_cartesian_to_spherical_n_back_and_forth():
     for r in range(10000):
         n = rng.randint(2, 100)
         if rng.uniform(0, 1) < .1:
-            x = rng.uniform(-10, 10, n) # row-vector
+            x = rng.uniform(-10, 10, n)  # row-vector
         else:
             m = rng.randint(1, 10)
-            x = rng.uniform(-10, 10, (m, n)) # array of row vectors
-        r, phi = cartesian_to_spherical_n(x)
+            x = rng.uniform(-10, 10, (m, n))  # array of row vectors
+        r, phi = sphere.cartesian_to_spherical_n(x)
         if phi.ndim == 1:
             phi = phi.reshape(1, -1)
 
@@ -193,18 +190,13 @@ def test_cartesian_to_spherical_n_back_and_forth():
         if n > 2:
             assert np.logical_and(phi[:, :-1] >= 0, phi[:, :-1] <= np.pi).sum() == len(phi) * (n-2)
 
-        x1 = spherical_to_cartesian_n(r, phi)
+        x1 = sphere.spherical_to_cartesian_n(r, phi)
         assert np.allclose(x, x1)
 
-        #
         # Make sure that spherical -> cartesian transform is invariant to
         # the following angle transformations:
 
         phi[:, -1] += rng.randint(-10, 10) * 2 * np.pi
 
-        x2 = spherical_to_cartesian_n(r, phi)
+        x2 = sphere.spherical_to_cartesian_n(r, phi)
         assert np.allclose(x, x2)
-
-
-
-
