@@ -1,9 +1,11 @@
 #  Copyright 2016-2020 Ivan Alles. See also the LICENSE file.
 
+import numpy as np
 from numpy.linalg import inv
+from scipy.spatial.transform import Rotation
 from scipy.stats import special_ortho_group
 
-from robogym.camera_calibration import *
+from robogym import camera_calibration
 
 
 def test_solve_ax_xb_park_martin():
@@ -20,7 +22,7 @@ def test_solve_ax_xb_park_martin():
         a.append(a_i)
         b.append(b_i)
 
-    x1, e1, e2 = solve_ax_xb_park_martin(a, b)
+    x1, e1, e2 = camera_calibration.solve_ax_xb_park_martin(a, b)
 
     assert e1 < 1e-5
     assert e2 < 1e-5
@@ -41,25 +43,27 @@ def test_solve_ax_xb_park_martin():
 def test_calibrate_camera_to_robot():
     rng = np.random.RandomState(seed=1)
     robot_pose_camera = random_rigid_transform_3d(rng)  # Camera pose in robot CS
-    tool_pose_marker = random_rigid_transform_3d(rng) # Pose of the marker on the tool
+    tool_pose_marker = random_rigid_transform_3d(rng)  # Pose of the marker on the tool
 
-    robot_poses_tool = [] # Poses of the tool in robot CS
-    camera_poses_marker = [] # Poses of the calibration object in camera CS
+    robot_poses_tool = []  # Poses of the tool in robot CS
+    camera_poses_marker = []  # Poses of the calibration object in camera CS
 
     for i in range(10):
-        robot_pose_tool = random_rigid_transform_3d(rng) # Random tool pose in robot CS
-        robot_pose_marker = np.dot(robot_pose_tool, tool_pose_marker) # Pose of the marker object in robot CS.
-        camera_pose_marker = np.dot(inv(robot_pose_camera), robot_pose_marker) # Pose of the marker in camera CS.
+        robot_pose_tool = random_rigid_transform_3d(rng)  # Random tool pose in robot CS
+        robot_pose_marker = np.dot(robot_pose_tool, tool_pose_marker)  # Pose of the marker object in robot CS.
+        camera_pose_marker = np.dot(inv(robot_pose_camera), robot_pose_marker)  # Pose of the marker in camera CS.
 
         robot_poses_tool.append(robot_pose_tool)
         camera_poses_marker.append(camera_pose_marker)
 
-    robot_pose_camera_1, tool_pose_marker_1, e1, e2 = calibrate_camera_to_robot(robot_poses_tool, camera_poses_marker)
+    robot_pose_camera_1, tool_pose_marker_1, e1, e2 = camera_calibration.calibrate_camera_to_robot(robot_poses_tool,
+                                                                                                   camera_poses_marker)
 
     assert e1 < 1e-5
     assert e2 < 1e-5
     assert np.linalg.norm(robot_pose_camera_1 - robot_pose_camera) < 1e-4
     assert np.linalg.norm(tool_pose_marker_1 - tool_pose_marker) < 1e-4
+
 
 def solve_ax_xb_noisy(x, sample_count, error_magnitude, rng):
     a = []
@@ -83,8 +87,9 @@ def solve_ax_xb_noisy(x, sample_count, error_magnitude, rng):
         a.append(a_i)
         b.append(b_i)
 
-    x1, e1, e2 = solve_ax_xb_park_martin(a, b)
+    x1, e1, e2 = camera_calibration.solve_ax_xb_park_martin(a, b)
     return x1
+
 
 def random_rigid_transform_3d(rng):
     t = np.zeros((4, 4))
