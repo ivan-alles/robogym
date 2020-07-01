@@ -21,9 +21,10 @@ jobs:
         python -m pip install --upgrade pip
         pip install pipenv
         pipenv sync --dev
+        pipenv shell
     - name: Lint with flake8
       run: |
-        pipenv run flake8
+        flake8
     - name: Test with pytest
       run: |
         pytest
