@@ -23,7 +23,7 @@ jobs:
         pipenv sync
     - name: Lint with flake8
       run: |
-        flake8
+        pipenv run flake8
     - name: Test with pytest
       run: |
-        pytest
+        pipenv run pytest
