@@ -107,7 +107,7 @@ def calibrate_camera_to_robot(robot_poses_tool, camera_poses_marker):
 
     tool_pose_marker = x
 
-    # TODO(ia): compute average from all measurements.
+    # TODO(ia): this can be improved by computing the average of all measurements.
     robot_pose_camera = np.dot(np.dot(robot_poses_tool[0], tool_pose_marker), inv(camera_poses_marker[0]))
 
     return robot_pose_camera, tool_pose_marker, e1, e2
