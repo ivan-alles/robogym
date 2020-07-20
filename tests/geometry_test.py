@@ -3,7 +3,6 @@
 import math
 import numpy as np
 
-import robogym.geometry
 from robogym import geometry
 
 
@@ -124,37 +123,37 @@ def test_spherical_to_cartesian_n_2():
 
     r = 1.
     phi = np.array([0.1])
-    act = robogym.geometry.spherical_to_cartesian_n(r, phi)
+    act = geometry.spherical_to_cartesian_n(r, phi)
     exp = compute(r, phi)
     assert np.allclose(exp, act)
 
     r = 0.
     phi = np.array([0.1])
-    act = robogym.geometry.spherical_to_cartesian_n(r, phi)
+    act = geometry.spherical_to_cartesian_n(r, phi)
     exp = compute(r, phi)
     assert np.allclose(exp, act)
 
     r = 0.
     phi = np.array([0.2])
-    act = robogym.geometry.spherical_to_cartesian_n(r, phi)
+    act = geometry.spherical_to_cartesian_n(r, phi)
     exp = compute(r, phi)
     assert np.allclose(exp, act)
 
     r = 3.
     phi = np.array([0.1])
-    act = robogym.geometry.spherical_to_cartesian_n(r, phi)
+    act = geometry.spherical_to_cartesian_n(r, phi)
     exp = compute(r, phi)
     assert np.allclose(exp, act)
 
     r = 2.
     phi = np.array([0.3])
-    act = robogym.geometry.spherical_to_cartesian_n(r, phi)
+    act = geometry.spherical_to_cartesian_n(r, phi)
     exp = compute(r, phi)
     assert np.allclose(exp, act)
 
     r = 2.
     phi = np.array([-0.3])
-    act = robogym.geometry.spherical_to_cartesian_n(r, phi)
+    act = geometry.spherical_to_cartesian_n(r, phi)
     exp = compute(r, phi)
     assert np.allclose(exp, act)
 
@@ -169,19 +168,19 @@ def test_spherical_to_cartesian_n_3():
         return np.array(exp).ravel()
     r = 1.
     phi = np.array([0.1, 0.2])
-    act = robogym.geometry.spherical_to_cartesian_n(r, phi)
+    act = geometry.spherical_to_cartesian_n(r, phi)
     exp = compute(r, phi)
     assert np.allclose(exp, act)
 
     r = 2.
     phi = np.array([0.1, 0.2])
-    act = robogym.geometry.spherical_to_cartesian_n(r, phi)
+    act = geometry.spherical_to_cartesian_n(r, phi)
     exp = compute(r, phi)
     assert np.allclose(exp, act)
 
     r = np.array([3., 4., 5]).reshape(-1, 1)
     phi = np.array([[0.1, -0.2], [0.1, 0.2], [0.3, -0.2]])
-    act = robogym.geometry.spherical_to_cartesian_n(r, phi)
+    act = geometry.spherical_to_cartesian_n(r, phi)
     exp0 = compute(r[0], phi[0])
     exp1 = compute(r[1], phi[1])
     exp2 = compute(r[2], phi[2])
@@ -226,7 +225,7 @@ def test_cartesian_to_spherical_n_2():
         [-1, 4]
     ], dtype=np.float32)
 
-    r_act, phi_act = robogym.geometry.cartesian_to_spherical_n(x)
+    r_act, phi_act = geometry.cartesian_to_spherical_n(x)
 
     for i in range(len(x)):
         r_exp, phi_exp = convert_cartesian_to_spherical(x[i])
@@ -249,7 +248,7 @@ def test_cartesian_to_spherical_n_3():
         [0, 0, -2]
     ], dtype=np.float32)
 
-    r_act, phi_act = robogym.geometry.cartesian_to_spherical_n(x)
+    r_act, phi_act = geometry.cartesian_to_spherical_n(x)
 
     for i in range(len(x)):
         r_exp, phi_exp = convert_cartesian_to_spherical(x[i])
@@ -270,7 +269,7 @@ def test_cartesian_to_spherical_n_4():
         [-1, -2, -3, 4],
     ], dtype=np.float32)
 
-    r_act, phi_act = robogym.geometry.cartesian_to_spherical_n(x)
+    r_act, phi_act = geometry.cartesian_to_spherical_n(x)
 
     for i in range(len(x)):
         r_exp, phi_exp = convert_cartesian_to_spherical(x[i])
@@ -288,7 +287,7 @@ def test_cartesian_to_spherical_n_back_and_forth():
         else:
             m = rng.randint(1, 10)
             x = rng.uniform(-10, 10, (m, n))  # array of row vectors
-        r, phi = robogym.geometry.cartesian_to_spherical_n(x)
+        r, phi = geometry.cartesian_to_spherical_n(x)
         if phi.ndim == 1:
             phi = phi.reshape(1, -1)
 
@@ -299,7 +298,7 @@ def test_cartesian_to_spherical_n_back_and_forth():
         if n > 2:
             assert np.logical_and(phi[:, :-1] >= 0, phi[:, :-1] <= np.pi).sum() == len(phi) * (n-2)
 
-        x1 = robogym.geometry.spherical_to_cartesian_n(r, phi)
+        x1 = geometry.spherical_to_cartesian_n(r, phi)
         assert np.allclose(x, x1)
 
         # Make sure that spherical -> cartesian transform is invariant to
@@ -307,5 +306,5 @@ def test_cartesian_to_spherical_n_back_and_forth():
 
         phi[:, -1] += rng.randint(-10, 10) * 2 * np.pi
 
-        x2 = robogym.geometry.spherical_to_cartesian_n(r, phi)
+        x2 = geometry.spherical_to_cartesian_n(r, phi)
         assert np.allclose(x, x2)
