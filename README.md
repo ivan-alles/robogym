@@ -1,4 +1,4 @@
-![robogym](https://github.com/ivan-alles/robogym/workflows/robogym/badge.svg)
+![robogym](https://github.com/ivan-alles/robogym/workflows/CI/badge.svg)
 
 # Robogym
 
