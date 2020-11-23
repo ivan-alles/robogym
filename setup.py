@@ -9,11 +9,6 @@ PACKAGE_FILE = 'package.json'
 with open(os.path.join(os.getcwd(), 'robogym', PACKAGE_FILE), 'r') as f:
     package = json.load(f)
 
-install_requires = [
-    'numpy',
-    'scipy'
-]
-
 with open('README.md', 'r') as fh:
     long_description = fh.read()
 
@@ -31,6 +26,10 @@ setuptools.setup(
         'Programming Language :: Python :: 3',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
+    ],
+    install_requires = [
+        'numpy',
+        'scipy'
     ],
     python_requires='>=3.6',
 )
