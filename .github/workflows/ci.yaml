@@ -1,4 +1,4 @@
-name: robogym
+name: CI
 
 on: [push]
 
