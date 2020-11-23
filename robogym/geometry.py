@@ -93,14 +93,14 @@ def plane_by_normal_point(n, p, epsilon=1e-10):
     n = np.array(n).squeeze()
     p = np.array(p).squeeze()
     if len(n) != 3:
-        raise ValueError("Normal size must be 3")
+        raise ValueError('Normal size must be 3')
     if len(p) != 3:
-        raise ValueError("Point size must be 3")
+        raise ValueError('Point size must be 3')
 
     n_norm = np.linalg.norm(n)
 
     if n_norm < epsilon:
-        raise ValueError("Normal vector has zero length")
+        raise ValueError('Normal vector has zero length')
     plane_eq = np.zeros(4)
     plane_eq[:3] = n / n_norm
     plane_eq[3] = -np.dot(plane_eq[:3], p)

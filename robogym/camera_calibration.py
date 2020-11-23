@@ -33,7 +33,7 @@ def solve_ax_xb_park_martin(a, b):
 
     if p < 3:
         # for p == 2 an exact solution could be used, but we will not waste time for it.
-        raise ValueError("At least three pairs of matrices A and B are required")
+        raise ValueError('At least three pairs of matrices A and B are required')
 
     m = np.zeros((3, 3), dtype=np.float64)
     log_ra = np.empty((p, 3), dtype=np.float64)
@@ -92,7 +92,7 @@ def calibrate_camera_to_robot(robot_poses_tool, camera_poses_marker):
     poses_count = len(camera_poses_marker)
 
     if len(robot_poses_tool) != poses_count:
-        raise ValueError("Number of gripper poses must match number of calibration object poses")
+        raise ValueError('Number of gripper poses must match number of calibration object poses')
 
     def pose_delta(p0, p1):
         return np.dot(inv(p0), p1)

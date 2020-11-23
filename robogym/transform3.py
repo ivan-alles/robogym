@@ -59,7 +59,7 @@ class Transform3:
             self._init_from_two_arrays(args[0], args[1])
 
         if not hasattr(self, '_m'):
-            raise ValueError("Cannot create Transform3 with given arguments: " + str(args))
+            raise ValueError('Cannot create Transform3 with given arguments: ' + str(args))
 
     @staticmethod
     def from_axis_angle(axis, angle=None):
@@ -104,7 +104,7 @@ class Transform3:
             n = norm(axis)
             if n < Transform3.EPSILON:
                 if angle > Transform3.EPSILON:
-                    raise ValueError("Cannot rotate around a zero-length axis")
+                    raise ValueError('Cannot rotate around a zero-length axis')
             else:
                 axis /= n
             axis *= angle
@@ -470,7 +470,7 @@ class Transform3:
         """
         Convert to a 6 DOF string representation.
         :format a string with formats for each field.
-        :return: a string "tx ty tz rx ry rz".
+        :return: a string 'tx ty tz rx ry rz'.
         """
         p6 = self.pose6()
         return format.format(*p6)
@@ -479,7 +479,7 @@ class Transform3:
         """
         Convert to a t, axis, angle representation.
         :format a string with formats for each field.
-        :return: a string "tx ty tz rx ry rz a".
+        :return: a string 'tx ty tz rx ry rz a'.
         """
         r = np.hstack(self.t_axis_angle())
         return format.format(*r)
@@ -508,7 +508,7 @@ def dot(*args):
     If the last argument is an array, it will be transformed using the given transforms.
     """
     if len(args) < 2:
-        raise ValueError("Need at least 2 arguments")
+        raise ValueError('Need at least 2 arguments')
 
     tr_list = list(args[:-1])
     rhs = args[-1:][0]
@@ -536,10 +536,10 @@ def chain(*args):
             a_list.append(t._m)
         elif type_t == np.ndarray:
             if t.shape != (4, 4):
-                raise ValueError("Wrong size of matrix")
+                raise ValueError('Wrong size of matrix')
             a_list.append(t)
         else:
-            raise ValueError("Unexpected argument type ", type_t)
+            raise ValueError('Unexpected argument type ', type_t)
 
     ch = np.linalg.multi_dot(a_list)
     return Transform3(ch)

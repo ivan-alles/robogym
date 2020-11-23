@@ -252,12 +252,12 @@ class Transform3Test:
     def test_str_pose6(self):
         tr = Transform3.from_pose6([1, 2, 3, 0, 2, 0])
         text = tr.str_pose6(format='{:.1f} {:.1f} {:.1f}   {:.2f} {:.2f} {:.2f}')
-        assert text == "1.0 2.0 3.0   0.00 2.00 0.00"
+        assert text == '1.0 2.0 3.0   0.00 2.00 0.00'
 
     def test_str_t_axis_angle(self):
         tr = Transform3.from_t_axis_angle([1, 2, 3], [0, 1, 0], 2)
         text = tr.str_t_axis_angle(format='{:.1f} ' * 7)
-        assert text == "1.0 2.0 3.0 0.0 1.0 0.0 2.0 "
+        assert text == '1.0 2.0 3.0 0.0 1.0 0.0 2.0 '
 
     def _check_dim_and_equality(self, a1, a2, rtol=1.e-5, atol=1.e-8, equal_nan=False):
         if a1.ndim != a2.ndim:

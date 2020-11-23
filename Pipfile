@@ -10,8 +10,6 @@ flake8 = "*"
 
 [packages]
 numpy = "*"
-piexif = "*"
-pillow = "*"
 scipy = "*"
 
 [requires]
